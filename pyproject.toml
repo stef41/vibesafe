@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vibesafe"
-version = "0.1.0"
+version = "0.2.0"
 description = "AI-generated code safety scanner for the vibe coding era"
 readme = "README.md"
 license = {text = "Apache-2.0"}
