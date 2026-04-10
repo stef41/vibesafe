@@ -127,6 +127,24 @@ vibesafe focuses specifically on **AI-generated code patterns** that traditional
 
 Use vibesafe **alongside** your existing linter, not instead of it.
 
+## See Also
+
+Part of the **stef41 LLM toolkit** — open-source tools for every stage of the LLM lifecycle:
+
+| Project | What it does |
+|---------|-------------|
+| [tokonomics](https://github.com/stef41/tokonomics) | Token counting & cost management for LLM APIs |
+| [datacrux](https://github.com/stef41/datacrux) | Training data quality — dedup, PII, contamination |
+| [castwright](https://github.com/stef41/castwright) | Synthetic instruction data generation |
+| [datamix](https://github.com/stef41/datamix) | Dataset mixing & curriculum optimization |
+| [toksight](https://github.com/stef41/toksight) | Tokenizer analysis & comparison |
+| [trainpulse](https://github.com/stef41/trainpulse) | Training health monitoring |
+| [ckpt](https://github.com/stef41/ckpt) | Checkpoint inspection, diffing & merging |
+| [quantbench](https://github.com/stef41/quantbench) | Quantization quality analysis |
+| [infermark](https://github.com/stef41/infermark) | Inference benchmarking |
+| [modeldiff](https://github.com/stef41/modeldiff) | Behavioral regression testing |
+| [injectionguard](https://github.com/stef41/injectionguard) | Prompt injection detection |
+
 ## License
 
 Apache 2.0
