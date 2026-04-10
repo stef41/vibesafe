@@ -1,0 +1,15 @@
+- id: vibesafe
+  name: vibesafe
+  description: Scan AI-generated Python code for security issues and anti-patterns
+  entry: vibesafe scan --fail-on error
+  language: python
+  types: [python]
+  require_serial: false
+
+- id: vibesafe-fix
+  name: vibesafe-fix
+  description: Auto-fix common issues in AI-generated Python code
+  entry: vibesafe fix
+  language: python
+  types: [python]
+  require_serial: true

@@ -32,6 +32,14 @@ def main(argv: list | None = None) -> int:
         help="Exit 1 if issues at this level or above are found",
     )
 
+    fix_p = subparsers.add_parser("fix", help="Auto-fix issues in files")
+    fix_p.add_argument("paths", nargs="+", help="Files or directories to fix")
+    fix_p.add_argument(
+        "--dry-run", action="store_true",
+        help="Show what would be fixed without modifying files",
+    )
+    fix_p.add_argument("--format", choices=["text", "json"], default="text")
+
     check_p = subparsers.add_parser("check", help="Check code from stdin")
     check_p.add_argument("--severity", choices=["error", "warning", "info"], default="info")
     check_p.add_argument("--format", choices=["text", "json"], default="text")
@@ -44,6 +52,8 @@ def main(argv: list | None = None) -> int:
 
     if args.command == "scan":
         return _cmd_scan(args)
+    elif args.command == "fix":
+        return _cmd_fix(args)
     elif args.command == "check":
         return _cmd_check(args)
 
@@ -77,6 +87,56 @@ def _cmd_scan(args) -> int:
     for issue in result.issues:
         if severity_order.get(issue.severity, 2) <= threshold:
             return 1
+    return 0
+
+
+def _cmd_fix(args) -> int:
+    from vibesafe.fixer import fix_file
+
+    files_fixed = 0
+    total_fixes = 0
+    all_results = []
+
+    for p in args.paths:
+        path = Path(p)
+        if path.is_file() and path.suffix == ".py":
+            targets = [path]
+        elif path.is_dir():
+            targets = sorted(path.rglob("*.py"))
+        else:
+            print(f"Warning: {p} not found", file=sys.stderr)
+            continue
+
+        for fpath in targets:
+            result = fix_file(fpath)
+            if result.changed:
+                all_results.append(result)
+                if not args.dry_run:
+                    fpath.write_text(result.fixed_source, encoding="utf-8")
+                files_fixed += 1
+                total_fixes += len(result.fixes_applied)
+
+    if args.format == "json":
+        data = {
+            "files_fixed": files_fixed,
+            "total_fixes": total_fixes,
+            "dry_run": args.dry_run,
+            "results": [
+                {"path": r.path, "fixes": r.fixes_applied}
+                for r in all_results
+            ],
+        }
+        print(json.dumps(data, indent=2))
+    else:
+        if not all_results:
+            print("\u2713 No fixable issues found")
+        else:
+            prefix = "[dry-run] " if args.dry_run else ""
+            for result in all_results:
+                for fix_msg in result.fixes_applied:
+                    print(f"  {prefix}\u2713 {result.path}: {fix_msg}")
+            print(f"\n{prefix}{total_fixes} fix(es) in {files_fixed} file(s)")
+
     return 0
 
 

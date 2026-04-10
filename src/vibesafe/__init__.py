@@ -4,5 +4,10 @@ __version__ = "0.1.0"
 
 from vibesafe.scanner import Scanner, ScanResult, Issue
 from vibesafe.scanner import scan_file, scan_directory, scan_code
+from vibesafe.fixer import fix_file, fix_source, FixResult, can_fix, FIXABLE_CODES
 
-__all__ = ["Scanner", "ScanResult", "Issue", "scan_file", "scan_directory", "scan_code"]
+__all__ = [
+    "Scanner", "ScanResult", "Issue",
+    "scan_file", "scan_directory", "scan_code",
+    "fix_file", "fix_source", "FixResult", "can_fix", "FIXABLE_CODES",
+]

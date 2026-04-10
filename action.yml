@@ -1,0 +1,48 @@
+name: 'vibesafe'
+description: 'Scan AI-generated Python code for security issues and anti-patterns'
+branding:
+  icon: 'shield'
+  color: 'purple'
+
+inputs:
+  paths:
+    description: 'Paths to scan (space-separated)'
+    required: false
+    default: '.'
+  severity:
+    description: 'Minimum severity to report (error, warning, info)'
+    required: false
+    default: 'info'
+  fail-on:
+    description: 'Fail if issues at this level or above are found'
+    required: false
+    default: 'error'
+  version:
+    description: 'vibesafe version to install'
+    required: false
+    default: 'latest'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install vibesafe
+      shell: bash
+      run: |
+        if [ "${{ inputs.version }}" = "latest" ]; then
+          pip install vibesafe
+        else
+          pip install "vibesafe==${{ inputs.version }}"
+        fi
+
+    - name: Run vibesafe
+      shell: bash
+      run: |
+        vibesafe scan ${{ inputs.paths }} \
+          --severity ${{ inputs.severity }} \
+          --fail-on ${{ inputs.fail-on }} \
+          --format text
