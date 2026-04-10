@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vibesafe"
+version = "0.1.0"
+description = "AI-generated code safety scanner for the vibe coding era"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+authors = [{name = "stef41"}]
+keywords = [
+    "vibe-coding", "ai-code-review", "static-analysis", "security",
+    "code-scanner", "llm", "ai-generated-code", "linter",
+    "mcp", "copilot", "cursor", "claude-code",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Security",
+]
+
+[project.scripts]
+vibesafe = "vibesafe.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/stef41/vibesafe"
+Repository = "https://github.com/stef41/vibesafe"
+Issues = "https://github.com/stef41/vibesafe/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vibesafe"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
