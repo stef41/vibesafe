@@ -3,15 +3,26 @@
 from __future__ import annotations
 
 import ast
+import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+_log = logging.getLogger("vibesafe")
+
 from vibesafe.checks.security import check_security
+_log = logging.getLogger("vibesafe")
+
 from vibesafe.checks.secrets import check_secrets
+_log = logging.getLogger("vibesafe")
+
 from vibesafe.checks.imports import check_imports
+_log = logging.getLogger("vibesafe")
+
 from vibesafe.checks.dead_code import check_dead_code
+_log = logging.getLogger("vibesafe")
+
 from vibesafe.checks.patterns import check_ai_patterns
 
 
@@ -118,8 +129,8 @@ class Scanner:
             try:
                 found = check(str(path), tree, source)
                 issues.extend(found)
-            except Exception:
-                pass
+            except Exception as exc:
+                _log.warning("Check %s failed: %s", getattr(check, '__name__', check), exc)
 
         threshold = self._severity_order.get(self.severity_threshold, 2)
         issues = [i for i in issues if self._severity_order.get(i.severity, 2) <= threshold]
@@ -159,8 +170,8 @@ class Scanner:
             try:
                 found = check(filename, tree, code)
                 issues.extend(found)
-            except Exception:
-                pass
+            except Exception as exc:
+                _log.warning("Check %s failed: %s", getattr(check, '__name__', check), exc)
 
         threshold = self._severity_order.get(self.severity_threshold, 2)
         issues = [i for i in issues if self._severity_order.get(i.severity, 2) <= threshold]
