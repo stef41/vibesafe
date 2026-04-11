@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from dataclasses import asdict
 from typing import Any
@@ -130,7 +131,11 @@ class MCPServer:
         path = arguments.get("path", "")
         if not path:
             return _error_response(req_id, -32602, "Missing required parameter: path")
-        issues = scan_file(path)
+        # Prevent path traversal via symlinks — resolve to canonical path
+        resolved = os.path.realpath(path)
+        if os.path.basename(resolved) != os.path.basename(path.rstrip(os.sep)):
+            return _error_response(req_id, -32602, "Path traversal not allowed")
+        issues = scan_file(resolved)
         result_data = {
             "issue_count": len(issues),
             "issues": _issues_to_dicts(issues),
